@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Для моей девочки 💗</title>
+    <title>Для моей жаным 💗</title>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,9 +98,9 @@
 
         /* Разные задержки для "проявления" фото */
         .collage img:nth-child(1) { animation-delay: 0.1s; }
-        .collage img:nth-child(2) { animation-delay: 0.25s; }
-        .collage img:nth-child(3) { animation-delay: 0.4s; }
-        .collage img:nth-child(4) { animation-delay: 0.55s; }
+        .collage img:nth-child(2) { animation-delay: 0.35s; }
+        .collage img:nth-child(3) { animation-delay: 0.65s; }
+        .collage img:nth-child(4) { animation-delay: 1.02s; }
 
         /* Большое фото сверху коллажа */
         .collage .big {
@@ -269,7 +269,7 @@
     <section id="screen1" class="screen active">
         <div class="box">
 
-            <h1>Для тебя, моя девочка 💗</h1>
+            <h1>Для моей жаным 💗</h1>
 
             <!-- КОЛЛАЖ ИЗ 5 ФОТО -->
             <div class="collage">
@@ -285,10 +285,10 @@
             </div>
 
             <p style="margin-top: 20px;">
-                А теперь — маленькая игра для тебя. Готова?
+                Are you ready my sunshine diamond? GO
             </p>
 
-            <button onclick="startGame()">Начать игру 💗</button>
+            <button onclick="startGame()">Начать игру </button>
 
         </div>
     </section>
@@ -298,7 +298,7 @@
         <div id="game">
             <div class="hud">
                 <div>Поймано: <span id="score">0</span> / 30</div>
-                <div class="lives" id="lives">💗💗💗</div>
+                <div class="lives" id="lives"></div>
             </div>
         </div>
     </section>
@@ -306,9 +306,9 @@
     <!-- ========= ЭКРАН 3 — ПОДБАДРИВАНИЕ ========= -->
     <section id="screen3" class="screen">
         <div class="box">
-            <h2 id="encourageTitle">Всё хорошо 💗</h2>
-            <p id="encourageText">Ничего страшного. Давай попробуем ещё раз — я рядом.</p>
-            <button onclick="startGame()">Продолжить 💗</button>
+            <h2 id="encourageTitle">Ай ты моя красотка супер пупер</h2>
+            <p id="encourageText">Профессор мой всех наук в мире</p>
+            <button onclick="startGame()">Продолжить </button>
         </div>
     </section>
 
@@ -320,9 +320,9 @@
             <h2>Ты поймала все наши сердечки 💗</h2>
 
             <div class="love-text">
-                <p>Ты знаешь, это ведь почти как в жизни. Иногда что-то падает мимо, иногда не успеваешь — но главное, что ты продолжаешь ловить.</p>
-                <p>Я хочу, чтобы ты знала: сколько бы сердечек ни пролетело мимо, моё — всегда твоё. Оно не падает. Оно просто твоё. 💗</p>
-            </div>
+    <p>Игра заканчивается. А мы — нет.</p>
+    <p>Я люблю тебя. Это самое простое, что я могу сказать. И самое правдивое. 💗</p>
+</div>
 
             <button onclick="resetToStart()">Посмотреть ещё раз ↺</button>
         </div>
@@ -346,15 +346,13 @@
         const MAX_LIVES = 3;
 
         const messages = [
-            "Ты только что поймала моё сердце. Снова. 💗",
-            "Знаешь, в реальной жизни ты ловишь его каждый день — просто тем, что ты есть.",
-            "Ещё чуть-чуть — и я скажу тебе кое-что важное..."
+            "Ты красотуля моя" 
         ];
 
         const encouragements = [
-            { title: "Всё хорошо 💗", text: "Ничего страшного. Давай попробуем ещё раз — я рядом." },
-            { title: "Не спеши, малыш", text: "Это просто игра. Смотри в центр экрана — так легче ловить." },
-            { title: "Я в тебя верю", text: "Ты уже почти. Ещё одна попытка — и всё получится." }
+            { title: "Вселенная ты моя"},
+            { title: "Малышка моя" },
+            { title: "Я в тебя верю" }
         ];
 
         /* =========================
