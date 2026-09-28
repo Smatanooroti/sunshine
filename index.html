@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для моей девочки 💗</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #ffe6ef, #ffd1df, #fff0f5);
+            color: #3b2530;
+            overflow: hidden;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ========= ЭКРАНЫ ========= */
+        .screen {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: 0.6s ease;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .box {
+            width: 100%;
+            max-width: 560px;
+            text-align: center;
+            padding: 30px 22px;
+        }
+
+        h1 { font-size: 32px; margin-bottom: 14px; }
+        h2 { font-size: 26px; margin-bottom: 14px; }
+        p { font-size: 17px; line-height: 1.6; margin-bottom: 14px; }
+
+        button {
+            border: none;
+            background: #ff6f9c;
+            color: white;
+            padding: 14px 26px;
+            border-radius: 30px;
+            font-size: 17px;
+            cursor: pointer;
+            margin-top: 14px;
+            box-shadow: 0 8px 20px rgba(255, 111, 156, 0.3);
+            transition: 0.25s;
+        }
+
+        button:hover { transform: translateY(-2px); }
+        button:active { transform: scale(0.97); }
+
+        /* ========= КОЛЛАЖ ========= */
+        .collage {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 480px;
+            animation: fadeInCollage 1s ease;
+        }
+
+        @keyframes fadeInCollage {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .collage img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(80, 30, 50, 0.15);
+            animation: popIn 0.7s ease backwards;
+            transition: 0.3s;
+        }
+
+        .collage img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 14px 30px rgba(80, 30, 50, 0.25);
+        }
+
+        /* Разные задержки для "проявления" фото */
+        .collage img:nth-child(1) { animation-delay: 0.1s; }
+        .collage img:nth-child(2) { animation-delay: 0.25s; }
+        .collage img:nth-child(3) { animation-delay: 0.4s; }
+        .collage img:nth-child(4) { animation-delay: 0.55s; }
+
+        /* Большое фото сверху коллажа */
+        .collage .big {
+            grid-column: 1 / -1;
+            height: 220px;
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .collage-caption {
+            font-size: 15px;
+            color: #a85b76;
+            font-style: italic;
+            margin-top: 12px;
+            animation: fadeInCollage 1.2s ease 0.8s backwards;
+        }
+
+        /* ========= ИГРА ========= */
+        #game {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        .hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 20px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #7a2f4d;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hud .lives { letter-spacing: 2px; }
+
+        .falling-heart {
+            position: absolute;
+            font-size: 40px;
+            top: -60px;
+            will-change: transform;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 8px rgba(255, 111, 156, 0.35));
+        }
+
+        .pop {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 700;
+            color: #ff4d87;
+            pointer-events: none;
+            animation: popUp 0.8s ease forwards;
+        }
+
+        @keyframes popUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1.4); }
+        }
+
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255,255,255,0.95);
+            padding: 22px 26px;
+            border-radius: 22px;
+            font-size: 18px;
+            line-height: 1.5;
+            color: #7a2f4d;
+            box-shadow: 0 15px 40px rgba(80, 30, 50, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.4s ease;
+            max-width: 320px;
+            text-align: center;
+            z-index: 20;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* ========= ФИНАЛ ========= */
+        .final-photo {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 28px;
+            display: block;
+            margin: 0 auto 22px;
+            box-shadow: 0 18px 45px rgba(80, 30, 50, 0.25);
+        }
+
+        .love-text {
+            text-align: left;
+            background: rgba(255,255,255,0.6);
+            padding: 22px;
+            border-radius: 22px;
+            margin-top: 18px;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* ========= МУЗЫКА ========= */
+        .musicButton {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: 50%;
+            z-index: 100;
+            margin: 0;
+            font-size: 20px;
+        }
+
+        /* ========= ФОНОВЫЕ СЕРДЕЧКИ ========= */
+        .bg-heart {
+            position: fixed;
+            bottom: -30px;
+            font-size: 20px;
+            animation: floatUp linear forwards;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            from { transform: translateY(0) rotate(0); opacity: 0; }
+            15% { opacity: 1; }
+            to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 500px) {
+            h1 { font-size: 28px; }
+            h2 { font-size: 22px; }
+            .collage img { height: 120px; }
+            .collage .big { height: 180px; }
+            .falling-heart { font-size: 34px; }
+            .final-photo { width: 260px; height: 260px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========= ЭКРАН 1 — СТАРТ С КОЛЛАЖЕМ ========= -->
+    <section id="screen1" class="screen active">
+        <div class="box">
+
+            <h1>Для тебя, моя девочка 💗</h1>
+
+            <!-- КОЛЛАЖ ИЗ 5 ФОТО -->
+            <div class="collage">
+                <img src="images/us.jpg" class="big" alt="Мы">
+                <img src="images/photo2.jpg" alt="Момент 1">
+                <img src="images/photo3.jpg" alt="Момент 2">
+                <img src="images/photo4.jpg" alt="Момент 3">
+                <img src="images/photo5.jpg" alt="Момент 4" style="grid-column: 1 / -1; height: 150px;">
+            </div>
+
+            <div class="collage-caption">
+                «Немного того, что я хочу сохранить с нами навсегда»
+            </div>
+
+            <p style="margin-top: 20px;">
+                А теперь — маленькая игра для тебя. Готова?
+            </p>
+
+            <button onclick="startGame()">Начать игру 💗</button>
+
+        </div>
+    </section>
+
+    <!-- ========= ЭКРАН 2 — ИГРА ========= -->
+    <section id="screen2" class="screen">
+        <div id="game">
+            <div class="hud">
+                <div>Поймано: <span id="score">0</span> / 30</div>
+                <div class="lives" id="lives">💗💗💗</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========= ЭКРАН 3 — ПОДБАДРИВАНИЕ ========= -->
+    <section id="screen3" class="screen">
+        <div class="box">
+            <h2 id="encourageTitle">Всё хорошо 💗</h2>
+            <p id="encourageText">Ничего страшного. Давай попробуем ещё раз — я рядом.</p>
+            <button onclick="startGame()">Продолжить 💗</button>
+        </div>
+    </section>
+
+    <!-- ========= ЭКРАН 4 — ФИНАЛ ========= -->
+    <section id="screen4" class="screen">
+        <div class="box">
+            <img src="images/photo6.jpg" class="final-photo" alt="Для тебя">
+
+            <h2>Ты поймала все наши сердечки 💗</h2>
+
+            <div class="love-text">
+                <p>Ты знаешь, это ведь почти как в жизни. Иногда что-то падает мимо, иногда не успеваешь — но главное, что ты продолжаешь ловить.</p>
+                <p>Я хочу, чтобы ты знала: сколько бы сердечек ни пролетело мимо, моё — всегда твоё. Оно не падает. Оно просто твоё. 💗</p>
+            </div>
+
+            <button onclick="resetToStart()">Посмотреть ещё раз ↺</button>
+        </div>
+    </section>
+
+    <!-- ========= МУЗЫКА ========= -->
+    <button id="musicButton" class="musicButton" onclick="toggleMusic()">♫</button>
+
+    <audio id="music" loop>
+        <source src="images/music.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+
+        /* =========================
+           НАСТРОЙКИ ИГРЫ
+        ========================= */
+
+        const WIN_SCORE = 30;
+        const MESSAGES_EVERY = 10;
+        const MAX_LIVES = 3;
+
+        const messages = [
+            "Ты только что поймала моё сердце. Снова. 💗",
+            "Знаешь, в реальной жизни ты ловишь его каждый день — просто тем, что ты есть.",
+            "Ещё чуть-чуть — и я скажу тебе кое-что важное..."
+        ];
+
+        const encouragements = [
+            { title: "Всё хорошо 💗", text: "Ничего страшного. Давай попробуем ещё раз — я рядом." },
+            { title: "Не спеши, малыш", text: "Это просто игра. Смотри в центр экрана — так легче ловить." },
+            { title: "Я в тебя верю", text: "Ты уже почти. Ещё одна попытка — и всё получится." }
+        ];
+
+        /* =========================
+           ПЕРЕМЕННЫЕ
+        ========================= */
+
+        let score = 0;
+        let lives = MAX_LIVES;
+        let spawnInterval = null;
+        let heartId = 0;
+        let lastMessageIndex = 0;
+        let encourageIndex = 0;
+        let isPlaying = false;
+        let musicStarted = false;
+        let bgHeartsStarted = false;
+
+        /* =========================
+           ЭКРАНЫ
+        ========================= */
+
+        function showScreen(number) {
+            document.querySelectorAll(".screen")
+                .forEach(s => s.classList.remove("active"));
+
+            document.getElementById("screen" + number)
+                .classList.add("active");
+        }
+
+        function resetToStart() {
+            stopGame();
+            score = 0;
+            lives = MAX_LIVES;
+            lastMessageIndex = 0;
+            updateHUD();
+            showScreen(1);
+        }
+
+        /* =========================
+           СТАРТ ИГРЫ
+        ========================= */
+
+        function startGame() {
+            stopGame();
+
+            score = 0;
+            lives = MAX_LIVES;
+            lastMessageIndex = 0;
+            isPlaying = true;
+
+            updateHUD();
+
+            const game = document.getElementById("game");
+            game.querySelectorAll(".falling-heart, .pop").forEach(el => el.remove());
+
+            game.addEventListener("pointerdown", onPointerDown);
+
+            showScreen(2);
+
+            startMusic();
+            createBgHearts();
+
+            spawnInterval = setInterval(spawnHeart, 750);
+        }
+
+        function stopGame() {
+            isPlaying = false;
+            if (spawnInterval) {
+                clearInterval(spawnInterval);
+                spawnInterval = null;
+            }
+
+            const game = document.getElementById("game");
+            game.removeEventListener("pointerdown", onPointerDown);
+            game.querySelectorAll(".falling-heart, .pop").forEach(el => el.remove());
+        }
+
+        /* =========================
+           HUD
+        ========================= */
+
+        function updateHUD() {
+            document.getElementById("score").textContent = score;
+            const hearts = "💗".repeat(lives) + "🤍".repeat(MAX_LIVES - lives);
+            document.getElementById("lives").textContent = hearts;
+        }
+
+        /* =========================
+           ПАДАЮЩИЕ СЕРДЕЧКИ
+        ========================= */
+
+        function spawnHeart() {
+            if (!isPlaying) return;
+
+            const game = document.getElementById("game");
+            const heart = document.createElement("div");
+
+            heart.className = "falling-heart";
+            heart.textContent = "💗";
+            heart.dataset.id = "h" + (heartId++);
+
+            const size = 34 + Math.random() * 20;
+            heart.style.fontSize = size + "px";
+
+            const screenW = window.innerWidth;
+            const startX = Math.random() * (screenW - size - 20) + 10;
+            heart.style.left = startX + "px";
+
+            const duration = 3200 + Math.random() * 2200;
+
+            heart.animate(
+                [
+                    { transform: "translateY(0)" },
+                    { transform: "translateY(" + (window.innerHeight + 80) + "px)" }
+                ],
+                {
+                    duration: duration,
+                    easing: "linear",
+                    fill: "forwards"
+                }
+            );
+
+            setTimeout(() => {
+                if (!heart.dataset.caught && heart.parentNode) {
+                    onMiss(heart);
+                }
+            }, duration);
+
+            game.appendChild(heart);
+        }
+
+        /* =========================
+           ЛОВЛЯ
+        ========================= */
+
+        function onPointerDown(e) {
+            if (!isPlaying) return;
+
+            const touchX = e.clientX;
+            const touchY = e.clientY;
+
+            const hearts = document.querySelectorAll(".falling-heart");
+            let bestHeart = null;
+            let bestDist = 65;
+
+            hearts.forEach(h => {
+                if (h.dataset.caught) return;
+
+                const r = h.getBoundingClientRect();
+                const cx = r.left + r.width / 2;
+                const cy = r.top + r.height / 2;
+
+                const dist = Math.hypot(cx - touchX, cy - touchY);
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    bestHeart = h;
+                }
+            });
+
+            if (bestHeart) {
+                catchHeart(bestHeart, touchX, touchY);
+            }
+        }
+
+        function catchHeart(heart, x, y) {
+            heart.dataset.caught = "1";
+
+            const pop = document.createElement("div");
+            pop.className = "pop";
+            pop.textContent = "+1 💗";
+            pop.style.left = x + "px";
+            pop.style.top = y + "px";
+            document.body.appendChild(pop);
+            setTimeout(() => pop.remove(), 800);
+
+            heart.remove();
+
+            score++;
+            updateHUD();
+
+            if (score % MESSAGES_EVERY === 0 && lastMessageIndex < messages.length) {
+                showToast(messages[lastMessageIndex]);
+                lastMessageIndex++;
+            }
+
+            if (score >= WIN_SCORE) {
+                stopGame();
+                setTimeout(() => showScreen(4), 700);
+            }
+        }
+
+        /* =========================
+           ПРОМАХ
+        ========================= */
+
+        function onMiss(heart) {
+            if (heart.dataset.caught) return;
+            heart.remove();
+
+            lives--;
+            updateHUD();
+
+            if (lives <= 0) {
+                stopGame();
+                showEncouragement();
+            }
+        }
+
+        function showEncouragement() {
+            const msg = encouragements[encourageIndex % encouragements.length];
+            encourageIndex++;
+
+            document.getElementById("encourageTitle").textContent = msg.title;
+            document.getElementById("encourageText").textContent = msg.text;
+
+            showScreen(3);
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+
+        function showToast(text) {
+            let toast = document.getElementById("toast");
+            if (!toast) {
+                toast = document.createElement("div");
+                toast.id = "toast";
+                toast.className = "toast";
+                document.body.appendChild(toast);
+            }
+            toast.textContent = text;
+            toast.classList.add("show");
+
+            setTimeout(() => toast.classList.remove("show"), 2200);
+        }
+
+        /* =========================
+           МУЗЫКА
+        ========================= */
+
+        function startMusic() {
+            const music = document.getElementById("music");
+            music.volume = 0.35;
+            music.play().then(() => musicStarted = true).catch(() => {});
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById("music");
+            const btn = document.getElementById("musicButton");
+
+            if (music.paused) {
+                music.play();
+                btn.textContent = "♫";
+            } else {
+                music.pause();
+                btn.textContent = "🔇";
+            }
+        }
+
+        /* =========================
+           ФОНОВЫЕ СЕРДЕЧКИ
+        ========================= */
+
+        function createBgHearts() {
+            if (bgHeartsStarted) return;
+            bgHeartsStarted = true;
+
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.className = "bg-heart";
+                heart.textContent = "💗";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.animationDuration = (6 + Math.random() * 5) + "s";
+                document.body.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 11000);
+            }, 1100);
+        }
+
+    </script>
+
+</body>
+</html>
